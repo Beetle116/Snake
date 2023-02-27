@@ -44,7 +44,7 @@ def new_food():
 
 def touch():
   global gameover
-  for field == snake[1:]:
+  for field in snake[1:]:
       if field == snake[0]:
         gameover = True
 
@@ -53,6 +53,8 @@ gameover = False
 step = (1, 0)
 grow = False
 new_food()
+speed = 1
+paused = False
 
 def move():
     x, y = snake[0]
@@ -71,27 +73,34 @@ def eat():
     if snake[0] == food:
         new_food()
         grow = True
-
+        global speed
+        speed = speed + 1
 
 
 
 pygame.display.set_caption('Hello World!')
-while True:
+while not gameover:
+  if not paused:
     move()
     eat()
     touch()
     draw()
-    clock.tick(5)
-    for event in pygame.event.get():
-        if event.type == KEYDOWN:
-            if event.key == K_UP:
-                step = (0, -1)
-            if event.key == K_LEFT:
-                step = (-1, 0)
-            if event.key == K_RIGHT:
-                step = (1, 0)
-            if event.key == K_DOWN:
-                step = (0, 1)
-        if event.type == QUIT:
-            pygame.quit()
-            sys.exit()
+  clock.tick(4 + speed)
+  for event in pygame.event.get():
+      if event.type == KEYDOWN:
+          if event.key == K_UP:
+              step = (0, -1)
+          if event.key == K_LEFT:
+              step = (-1, 0)
+          if event.key == K_RIGHT:
+              step = (1, 0)
+          if event.key == K_DOWN:
+              step = (0, 1)
+          if event.key == K_SPACE:
+              paused = True
+      if event.type == KEYUP:
+          if event.key == K_SPACE:
+            paused = False
+      if event.type == QUIT:
+          pygame.quit()
+          sys.exit()
